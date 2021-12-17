@@ -1,13 +1,16 @@
 // Write your JavaScript code here!
 
 window.addEventListener("load", function() {
+   let form = document.querySelector("form");
+   form.addEventListener("submit", function(event) {
+      event.preventDefault();
    let pilotName = document.querySelector("input[name=pilotName]");
    let copilotName = document.querySelector("input[name=copilotName]");
    let fuelLevel = document.querySelector("input[name=fuelLevel]");
    let cargoMass = document.querySelector("input[name=cargoMass]");
    let fuelLevelNumber = Number(fuelLevel.value);
    let cargoMassNumber = Number(cargoMass.value);
-   let form = document.querySelector("form");
+
    let pilotStatus = document.getElementById("pilotStatus");
    let coPilotStatus = document.getElementById("copilotStatus");
    let faultyItems = document.getElementById("faultyItems");
@@ -23,9 +26,9 @@ window.addEventListener("load", function() {
    } 
 
    function lowFuelLevel(){
-      let requiredFuel = (10000 - fuelLevelNumber);
+      //let requiredFuel = (10000 - fuelLevelNumber);
       faultyItems.style.visibility = "visible";
-      fuelStatus.innerHTML = `Need ${requiredFuel} more kg of fuel for launch!`;
+      fuelStatus.innerHTML = `Not enough fuel for journey!`;
       fuelStatus.style.color = "red"
       launchStatus.innerHTML = "Shuttle not ready for launch";
       launchStatus.style.color = "red";
@@ -39,7 +42,7 @@ window.addEventListener("load", function() {
 
    function oversizeLoad(){
       faultyItems.style.visibility = "visible";
-      cargoStatus.innerHTML = `${cargoMassNumber - 10000} pounds over max load weight!`;
+      cargoStatus.innerHTML = `Too much mass to take off!`;
       cargoStatus.style.color = "red";
       launchStatus.innerHTML = "Shuttle not ready for launch";
       launchStatus.style.color = "red";
@@ -51,8 +54,7 @@ window.addEventListener("load", function() {
       launchStatus.style.color = "green";
    }
 
-   form.addEventListener("submit", function(event) {
-      event.preventDefault();
+
       
       if (pilotName.value === "" || copilotName.value === "" || fuelLevel.value === "" || cargoMass.value === "") { //prevents form submission if form fields are blank
          alert("All fields are required!");
@@ -63,12 +65,20 @@ window.addEventListener("load", function() {
       } else if (!pilotName.value.match(/^[A-Za-z]+$/) || !copilotName.value.match(/^[A-Za-z]+$/)) { //checks to see if numbers are not submitted with pilot name and co pilot name
          alert("Copilot or pilot name does not meet requirements")
   
+      } else if (fuelLevelNumber < 10000) {
+         lowFuelLevel();
+
+      } else if (cargoMassNumber > 10000) {
+         oversizeLoad()
+
       } else {
          pilotReady();
-         fuelLevelNumber > 10000 ? lowFuelLevel() : fuelLevelStatus() ;
-         cargoMassNumber > 10000 ? oversizeLoad() : cargoStatusPass()
+         cargoStatusPass();
+         fuelLevelStatus();
       }
       
+console.log(typeof fuelLevel.value);
+console.log(typeof cargoMass.value);
 
    });
 
